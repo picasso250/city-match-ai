@@ -18,11 +18,17 @@ function parseMarkdown(md) {
             continue;
         }
 
-        let headerMatch = line.match(/^(#{1,3})\s+(.*)/);
+        let headerMatch = line.match(/^(#{1,6})\s+(.*)/);
         if (headerMatch) {
             if (inList) { html += '</ul>\n'; inList = false; }
             let level = headerMatch[1].length;
             html += `<h${level}>${parseInline(headerMatch[2])}</h${level}>\n`;
+            continue;
+        }
+
+        if (line === '---' || line === '***' || line === '___') {
+            if (inList) { html += '</ul>\n'; inList = false; }
+            html += '<hr>\n';
             continue;
         }
 
@@ -89,7 +95,7 @@ document.getElementById('submit-btn').addEventListener('click', async () => {
     window.addEventListener('scroll', scrollHandler);
 
     try {
-        const response = await fetch('http://localhost:8787/api/match', {
+        const response = await fetch('https://city-ai-bg.xi-aochi.workers.dev/api/match', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ food, climate, pace, interest, description }),

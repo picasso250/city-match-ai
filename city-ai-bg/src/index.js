@@ -3,7 +3,7 @@ export default {
     const url = new URL(request.url);
 
     const corsHeaders = {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'https://city.io99.xyz',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     };
@@ -45,7 +45,10 @@ export default {
             ],
             stream: true,
             temperature: 0.8,
-            extra_body: { enable_thinking: true }
+            extra_body: { 
+              enable_thinking: true,
+              reasoning_effort: "low" // 降低思考强度，侧重于快速画像和有趣推荐，而不是深度推演
+            }
           })
         });
 
