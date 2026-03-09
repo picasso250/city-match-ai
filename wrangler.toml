@@ -1,0 +1,6 @@
+name = "city-match-ai"
+compatibility_date = "2024-03-09"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
