@@ -1,29 +1,44 @@
-// Simple Markdown Parser (Refined)
+// Robust Markdown Parser
 function parseMarkdown(md) {
-    let html = md
-        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-        .replace(/^\* (.*$)/gim, '<li>$1</li>')
-        .replace(/^- (.*$)/gim, '<li>$1</li>')
-        .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
-        .replace(/\*(.*)\*/gim, '<em>$1</em>')
-        .replace(/\n/g, '<br>');
+    const lines = md.split('\n');
+    let inList = false;
+    let html = '';
 
-    // Wrap <li> into <ul>
-    html = html.replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
-    html = html.replace(/<\/ul><br><ul>/gim, ''); // Cleanup line breaks between lists
-    html = html.replace(/<\/ul><ul>/gim, ''); 
+    const parseInline = (text) => {
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/`(.*?)`/g, '<code>$1</code>');
+    };
 
-    // Handle paragraphs
-    const lines = html.split('<br>');
-    const result = lines.map(line => {
-        if (!line.trim()) return '';
-        if (line.startsWith('<')) return line;
-        return `<p>${line}</p>`;
-    }).join('');
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
+        if (!line) {
+            if (inList) { html += '</ul>\n'; inList = false; }
+            continue;
+        }
 
-    return result;
+        let headerMatch = line.match(/^(#{1,3})\s+(.*)/);
+        if (headerMatch) {
+            if (inList) { html += '</ul>\n'; inList = false; }
+            let level = headerMatch[1].length;
+            html += `<h${level}>${parseInline(headerMatch[2])}</h${level}>\n`;
+            continue;
+        }
+
+        let listMatch = line.match(/^[\*\-]\s+(.*)/);
+        if (listMatch) {
+            if (!inList) { html += '<ul>\n'; inList = true; }
+            html += `<li>${parseInline(listMatch[1])}</li>\n`;
+            continue;
+        }
+
+        if (inList) { html += '</ul>\n'; inList = false; }
+        html += `<p>${parseInline(line)}</p>\n`;
+    }
+
+    if (inList) { html += '</ul>\n'; }
+    return html;
 }
 
 // Handle Option Button Selection
@@ -64,6 +79,14 @@ document.getElementById('submit-btn').addEventListener('click', async () => {
     const statusText = document.getElementById('status-text');
     const thinkingContent = thinkingBox.querySelector('.thinking-content');
     const finalMatch = document.getElementById('final-match');
+
+    let isAutoScrolling = true;
+    const scrollHandler = () => {
+        const threshold = 100; // px from bottom
+        const isAtBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - threshold);
+        isAutoScrolling = isAtBottom;
+    };
+    window.addEventListener('scroll', scrollHandler);
 
     try {
         const response = await fetch('http://localhost:8787/api/match', {
@@ -114,17 +137,21 @@ document.getElementById('submit-btn').addEventListener('click', async () => {
                         }
                         fullContent += delta.content;
                         finalMatch.innerHTML = parseMarkdown(fullContent);
-                        // Auto-scroll logic
-                        const scrollingElement = (document.scrollingElement || document.body);
-                        scrollingElement.scrollTop = scrollingElement.scrollHeight;
+                        
+                        // Smart Auto-scroll
+                        if (isAutoScrolling) {
+                            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                        }
                     }
                 } catch (e) {}
             }
         }
         
         statusText.innerText = "为您生成的专属匹配报告如下：";
+        window.removeEventListener('scroll', scrollHandler);
 
     } catch (error) {
+        window.removeEventListener('scroll', scrollHandler);
         resultContent.innerHTML = `<p class="error-msg">❌ 错误: ${error.message}</p>`;
     }
 });
