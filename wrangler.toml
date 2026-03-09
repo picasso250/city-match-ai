@@ -1,0 +1,6 @@
+name = "city-match-ai"
+pages_build_output_dir = "public"
+
+[deployment]
+# 显式指定生产环境分支为 main
+production_branch = "main"
