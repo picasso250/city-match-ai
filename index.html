@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>城市匹配指南 - 寻找你的归宿</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏙️ 城市匹配指南</h1>
+            <p>基于 AI 的趣味性格与城市契合度测试（仅供娱乐）</p>
+        </header>
+
+        <main id="app">
+            <div id="quiz-form">
+                <div class="card">
+                    <h2>关于你的生活方式</h2>
+                    
+                    <div class="form-group">
+                        <label>1. 你更喜欢什么样的饮食口味？</label>
+                        <select id="food">
+                            <option value="spicy">无辣不欢（川渝湘）</option>
+                            <option value="sweet">清淡鲜甜（苏浙粤）</option>
+                            <option value="salty">咸鲜浓郁（鲁冀辽）</option>
+                            <option value="diverse">融合多元（北上深）</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>2. 理想的居住气候是？</label>
+                        <select id="climate">
+                            <option value="warm">四季如春，温暖湿润</option>
+                            <option value="cold">四季分明，喜欢下雪</option>
+                            <option value="dry">干爽宜人，阳光充足</option>
+                            <option value="humid">烟雨朦胧，水乡韵味</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>3. 你向往的生活节奏？</label>
+                        <select id="pace">
+                            <option value="fast">快节奏，充满竞争与机会</option>
+                            <option value="slow">慢生活，松弛感与烟火气</option>
+                            <option value="moderate">平衡，工作生活两不误</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>4. 你的职业倾向或兴趣？</label>
+                        <select id="interest">
+                            <option value="tech">互联网与高新科技</option>
+                            <option value="culture">人文艺术与历史底蕴</option>
+                            <option value="nature">山水风景与户外探索</option>
+                            <option value="finance">金融贸易与商业繁荣</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>5. 简单描述一下你理想的一天：</label>
+                        <textarea id="description" placeholder="例如：清晨在公园散步，下午在写字楼奋斗，晚上去吃火锅..."></textarea>
+                    </div>
+
+                    <button id="submit-btn">开始匹配我的城市</button>
+                </div>
+            </div>
+
+            <div id="result-container" class="hidden">
+                <div class="card result-card">
+                    <h2>匹配结果</h2>
+                    <div id="result-content">
+                        <div class="loader"></div>
+                        <p>AI 正在根据你的性格特征遍历中国版图...</p>
+                    </div>
+                    <button id="retry-btn">重新测试</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2026 城市匹配指南 | Powered by GLM-4/5 & Cloudflare Workers</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
