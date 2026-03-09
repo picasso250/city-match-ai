@@ -95,7 +95,7 @@ document.getElementById('submit-btn').addEventListener('click', async () => {
     window.addEventListener('scroll', scrollHandler);
 
     try {
-        const response = await fetch('https://city-ai-bg.xi-aochi.workers.dev/api/match', {
+        const response = await fetch('/api/match', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ food, climate, pace, interest, description }),
