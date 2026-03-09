@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "city-ai-bg",
+  "name": "city-match-ai",
   "main": "src/index.js",
   "compatibility_date": "2024-03-09",
   "assets": {
